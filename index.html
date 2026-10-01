@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Допомога дідусеві</title>
+
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#667085;--blue:#2563eb;--green:#16a34a;--red:#dc2626;--border:#e5e7eb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text)}
+.app{max-width:720px;margin:auto;padding:16px 14px 90px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+h1{font-size:25px;margin:0}.subtitle{color:var(--muted);font-size:13px;margin-top:3px}
+.card{background:var(--card);border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 3px 14px #17203312}
+.screen{display:none}.screen.active{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bigbtn{border:0;border-radius:18px;padding:22px 10px;font-size:20px;font-weight:750;cursor:pointer;background:#eaf1ff;color:#1647a8}
+.bigbtn.rom{background:#e9f7ee;color:#16733a}.bigbtn.nast{background:#fff0f6;color:#b42368}
+.task{width:100%;text-align:left;border:1px solid var(--border);background:#fff;border-radius:15px;padding:14px;margin:7px 0;font-size:16px}
+.task b{display:block}.task span{color:var(--muted);font-size:13px}
+.btn{border:0;border-radius:13px;padding:12px 15px;font-weight:700;cursor:pointer}
+.primary{background:var(--blue);color:white}.secondary{background:#eef2f7;color:var(--text)}
+.green{background:var(--green);color:white}.danger{background:#fee2e2;color:#991b1b}
+.back{background:none;border:0;padding:0 0 8px;color:var(--blue);font-weight:700;font-size:15px}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}
+input,select{width:100%;padding:13px;border:1px solid var(--border);border-radius:12px;font-size:17px}
+.amount{font-size:30px;font-weight:800;text-align:center;padding:10px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.muted{color:var(--muted)}
+.pill{padding:5px 9px;border-radius:99px;font-size:12px;font-weight:700;background:#eaf1ff;color:#1647a8}
+.paid{background:#dcfce7;color:#166534}.unpaid{background:#fef3c7;color:#92400e}
+.stat{padding:14px;border-radius:16px;background:#f8fafc}
+.stat .n{font-size:23px;font-weight:800}.stat .l{font-size:12px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 5px;border-bottom:1px solid var(--border)}
+th{color:var(--muted)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);padding:8px;display:flex;justify-content:center;z-index:5}
+.navin{max-width:720px;width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.nav button{border:0;background:none;padding:8px 3px;border-radius:10px;font-size:11px;font-weight:700;color:var(--muted)}
+.nav button.active{background:#eaf1ff;color:var(--blue)}
+.note{font-size:12px;color:var(--muted);line-height:1.45}
+.empty{text-align:center;padding:25px;color:var(--muted)}
+.loading{text-align:center;padding:30px;color:var(--muted)}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="top">
+<div>
+<h1>👴 Допомога дідусеві</h1>
+<div class="subtitle">Сімейний облік допомоги</div>
+</div>
+<button class="btn secondary" onclick="showScreen('reports')">📊</button>
+</div>
+
+<div id="status" class="card loading">Підключення до сімейної бази...</div>
+
+<section id="home" class="screen">
+
+<div class="card">
+<h2>Хто виконав роботу?</h2>
+<div class="grid2">
+<button class="bigbtn nast" onclick="chooseChild('Настя')">👧<br>Настя</button>
+<button class="bigbtn rom" onclick="chooseChild('Рома')">👦<br>Рома</button>
+</div>
+</div>
+
+<div class="card">
+<div class="row">
+<b>Останні записи</b>
+<span class="muted">автоматично</span>
+</div>
+<div id="recent"></div>
+
+<div style="margin:10px 0;padding:10px 12px;border-radius:12px;background:#eaf1ff;color:#1647a8;font-size:12px">
+☁️ Дані зберігаються у спільній сімейній базі.
+</div>
+</div>
+
+</section>
+
+<section id="tasks" class="screen">
+
+<button class="back" onclick="showScreen('home')">← Назад</button>
+
+<div class="card">
+<h2 id="childTitle"></h2>
+<p class="muted">Оберіть виконану роботу</p>
+<div id="taskList"></div>
+</div>
+
+</section>
+
+<section id="add" class="screen">
+
+<button class="back" onclick="showScreen('tasks')">← Назад до робіт</button>
+
+<div class="card">
+
+<h2 id="addTitle"></h2>
+
+<div id="hoursBox"></div>
+
+<label>Бонус</label>
+
+<select id="bonus">
+<option value="0">Без бонусу</option>
+<option value="5">+5 € — ініціатива</option>
+<option value="5">+5 € — без нагадування</option>
+<option value="10">+10 € — термінове завдання</option>
+<option value="0">Інший бонус — введу нижче</option>
+</select>
+
+<label>Інший бонус, €</label>
+<input id="customBonus" type="number" min="0" step="1" value="0">
+
+<div class="amount" id="calc">15,00 €</div>
+
+<button class="btn primary" style="width:100%;font-size:18px;padding:15px" onclick="addEntry()">
+➕ Додати виконану роботу
+</button>
+
+</div>
+</section>
+
+<section id="history" class="screen">
+
+<div class="card">
+
+<div class="row">
+<h2 style="margin:0">📋 Історія</h2>
+<button class="btn danger" onclick="clearAll()">Очистити</button>
+</div>
+
+<div id="historyList"></div>
+
+</div>
+</section>
+
+<section id="reports" class="screen">
+
+<div class="card">
+
+<h2>📊 Звіти та статистика</h2>
+
+<div class="grid2">
+
+<div class="stat">
+<div class="n" id="rNastia">0 €</div>
+<div class="l">Настя</div>
+</div>
+
+<div class="stat">
+<div class="n" id="rRoma">0 €</div>
+<div class="l">Рома</div>
+</div>
+
+<div class="stat">
+<div class="n" id="rTotal">0 €</div>
+<div class="l">Загалом</div>
+</div>
+
+<div class="stat">
+<div class="n" id="rTasks">0</div>
+<div class="l">Завдань</div>
+</div>
+
+<div class="stat">
+<div class="n" id="rPaid">0 €</div>
+<div class="l">Виплачено</div>
+</div>
+
+<div class="stat">
+<div class="n" id="rDue">0 €</div>
+<div class="l">До виплати</div>
+</div>
+
+</div>
+</div>
+
+<div class="card">
+<h3>За поточний місяць</h3>
+<div id="monthStats"></div>
+</div>
+
+<div class="card">
+<h3>Види роботи</h3>
+<div id="workStats"></div>
+</div>
+
+<div class="card">
+
+<button class="btn primary" style="width:100%;font-size:16px" onclick="copyViber()">
+📤 Скопіювати звіт у Viber
+</button>
+
+<p class="note">
+Кнопка копіює готовий текст. Потім відкрийте сімейну групу Viber і вставте повідомлення.
+</p>
+
+</div>
+
+</section>
+
+</div>
+
+<div class="nav">
+<div class="navin">
+
+<button onclick="showScreen('home')" id="navhome">
+🏠<br>Головна
+</button>
+
+<button onclick="showScreen('history')" id="navhistory">
+📋<br>Історія
+</button>
+
+<button onclick="showScreen('reports')" id="navreports">
+📊<br>Звіти
+</button>
+
+<button onclick="showScreen('home')" id="navadd">
+➕<br>Додати
+</button>
+
+</div>
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+import {
+getAuth,
+signInAnonymously
+}
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+updateDoc,
+doc,
+query,
+orderBy
+}
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyDJUanKnJhCwZil0070JCvFsl_ptRJ6z5U",
+
+authDomain: "volodyka-d0e6f.firebaseapp.com",
+
+projectId: "volodyka-d0e6f",
+
+storageBucket: "volodyka-d0e6f.firebasestorage.app",
+
+messagingSenderId: "897772118836",
+
+appId: "1:897772118836:web:d14da433651226be85bb61",
+
+measurementId: "G-2E8YD99FSF"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+const entriesRef = collection(
+db,
+"families",
+"grandpa-help-demo",
+"entries"
+);
+
+
+const tasks=[
+
+{id:'clean',name:'🧹 Прибирання у дідуся',type:'fixed',rate:15,unit:'раз'},
+
+{id:'area',name:'🏠 Прибирання загальної території',type:'fixed',rate:15,unit:'раз'},
+
+{id:'food',name:'🍲 Доставка готової їжі',type:'fixed',rate:10,unit:'раз'},
+
+{id:'laundry',name:'🧺 Прання та заміна постільної білизни',type:'fixed',rate:15,unit:'раз'},
+
+{id:'walk',name:'🚶 Прогулянка / час із дідусем',type:'hour',rate:10,unit:'год'},
+
+{id:'errand',name:'🛒 Поїздка / супровід / організаційна справа',type:'hour',rate:10,unit:'год'},
+
+{id:'physical',name:'🔨 Додаткова фізична робота / прибирання',type:'hour',rate:15,unit:'год'}
+
+];
+
+
+let entries=[];
+
+let selectedChild='';
+
+let selectedTask=null;
+
+
+function money(n){
+
+return Number(n).toLocaleString(
+'uk-UA',
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+)+' €';
+
+}
+
+
+function fmtDate(d){
+
+return new Date(d).toLocaleString(
+'uk-UA',
+{
+day:'2-digit',
+month:'2-digit',
+year:'numeric',
+hour:'2-digit',
+minute:'2-digit'
+}
+);
+
+}
+
+
+window.showScreen=function(id){
+
+document.querySelectorAll('.screen')
+.forEach(x=>x.classList.remove('active'));
+
+document.getElementById(id)
+.classList.add('active');
+
+document.querySelectorAll('.nav button')
+.forEach(x=>x.classList.remove('active'));
+
+const n=document.getElementById('nav'+id);
+
+if(n)n.classList.add('active');
+
+if(id==='home')renderRecent();
+
+if(id==='history')renderHistory();
+
+if(id==='reports')renderReports();
+
+window.scrollTo(0,0);
+
+};
+
+
+window.chooseChild=function(c){
+
+selectedChild=c;
+
+document.getElementById('childTitle').textContent=
+(c==='Настя'?'👧 ':'👦 ')+c;
+
+document.getElementById('taskList').innerHTML=
+tasks.map(t=>`
+
+<button class="task" onclick="selectTask('${t.id}')">
+
+<b>${t.name}</b>
+
+<span>
+${t.type==='hour'
+?t.rate+' €/год'
+:' '+t.rate+' € за '+t.unit}
+</span>
+
+</button>
+
+`).join('');
+
+showScreen('tasks');
+
+};
+
+
+window.selectTask=function(id){
+
+selectedTask=tasks.find(t=>t.id===id);
+
+document.getElementById('addTitle').textContent=
+selectedTask.name;
+
+document.getElementById('hoursBox').innerHTML=
+selectedTask.type==='hour'
+?
+'<label>Кількість годин</label>'+
+'<input id="hours" type="number" min="0.25" step="0.25" value="1" oninput="calc()">'
+:
+'<p class="muted">Фіксована оплата: '+money(selectedTask.rate)+'</p>';
+
+document.getElementById('bonus').value='0';
+
+document.getElementById('customBonus').value=0;
+
+calc();
+
+showScreen('add');
+
+};
+
+
+window.calc=function(){
+
+if(!selectedTask)return;
+
+const h=document.getElementById('hours');
+
+let base=
+selectedTask.type==='hour'
+?selectedTask.rate*Number(h?.value||0)
+:selectedTask.rate;
+
+let bonus=
+Number(document.getElementById('bonus').value||0)+
+Number(document.getElementById('customBonus').value||0);
+
+document.getElementById('calc').textContent=
+money(base+bonus);
+
+};
+
+
+document.addEventListener('input',e=>{
+
+if(e.target.id==='customBonus' ||
+e.target.id==='bonus')calc();
+
+});
+
+
+window.addEntry=async function(){
+
+let h=document.getElementById('hours');
+
+let hours=
+selectedTask.type==='hour'
+?Number(h.value)
+:null;
+
+if(
+selectedTask.type==='hour' &&
+(!hours || hours<=0)
+){
+
+alert('Вкажіть кількість годин');
+
+return;
+
+}
+
+let base=
+selectedTask.type==='hour'
+?selectedTask.rate*hours
+:selectedTask.rate;
+
+let bonus=
+Number(document.getElementById('bonus').value||0)+
+Number(document.getElementById('customBonus').value||0);
+
+const entry={
+
+date:new Date().toISOString(),
+
+child:selectedChild,
+
+task:selectedTask.name,
+
+taskId:selectedTask.id,
+
+hours:hours,
+
+base:base,
+
+bonus:bonus,
+
+total:base+bonus,
+
+paid:false
+
+};
+
+try{
+
+await addDoc(entriesRef,entry);
+
+alert(
+'Готово! Роботу додано: '+
+money(base+bonus)
+);
+
+await loadEntries();
+
+showScreen('home');
+
+}catch(error){
+
+console.error(error);
+
+alert(
+'Не вдалося зберегти запис. Перевірте підключення до Інтернету.'
+);
+
+}
+
+};
+
+
+async function loadEntries(){
+
+try{
+
+const q=query(
+entriesRef,
+orderBy('date','desc')
+);
+
+const snapshot=await getDocs(q);
+
+entries=snapshot.docs.map(
+d=>({
+id:d.id,
+...d.data()
+})
+);
+
+renderRecent();
+
+renderHistory();
+
+renderReports();
+
+}catch(error){
+
+console.error(error);
+
+alert(
+'Помилка завантаження сімейної бази.'
+);
+
+}
+
+}
+
+
+function renderRecent(){
+
+let el=document.getElementById('recent');
+
+let a=entries.slice(0,5);
+
+el.innerHTML=a.length
+?
+a.map(e=>`
+
+<div class="row"
+style="padding:10px 0;border-bottom:1px solid var(--border)">
+
+<div>
+
+<b>${e.child}</b> · ${e.task}
+
+<div class="muted" style="font-size:12px">
+${fmtDate(e.date)}
+</div>
+
+</div>
+
+<b>${money(e.total)}</b>
+
+</div>
+
+`).join('')
+
+:
+'<div class="empty">Поки немає записів</div>';
+
+}
+
+
+function renderHistory(){
+
+let el=document.getElementById('historyList');
+
+if(!entries.length){
+
+el.innerHTML=
+'<div class="empty">Історія порожня</div>';
+
+return;
+
+}
+
+el.innerHTML=entries.map(e=>`
+
+<div class="card"
+style="box-shadow:none;border:1px solid var(--border);padding:13px">
+
+<div class="row">
+
+<b>${e.child}</b>
+
+<span class="pill ${e.paid?'paid':'unpaid'}">
+
+${e.paid?'Виплачено':'Не виплачено'}
+
+</span>
+
+</div>
+
+<div style="margin:7px 0">
+${e.task}
+</div>
+
+<div class="muted">
+
+${fmtDate(e.date)}
+${e.hours?' · '+e.hours+' год.':''}
+
+</div>
+
+<div class="row" style="margin-top:8px">
+
+<span>
+
+Робота ${money(e.base)}
+
+${e.bonus
+?' + бонус '+money(e.bonus)
+:''}
+
+</span>
+
+<b>${money(e.total)}</b>
+
+</div>
+
+<button
+class="btn ${e.paid?'secondary':'green'}"
+style="margin-top:9px"
+onclick="togglePaid('${e.id}')">
+
+${e.paid
+?'↩ Позначити невиплачено'
+:'💶 Позначити виплаченим'}
+
+</button>
+
+</div>
+
+`).join('');
+
+}
+
+
+window.togglePaid=async function(id){
+
+let e=entries.find(x=>x.id===id);
+
+if(!e)return;
+
+try{
+
+await updateDoc(
+doc(db,"families","grandpa-help-demo","entries",id),
+{
+paid:!e.paid
+}
+);
+
+await loadEntries();
+
+}catch(error){
+
+console.error(error);
+
+alert('Не вдалося змінити статус виплати.');
+
+}
+
+};
+
+
+function renderReports(){
+
+let total=c=>
+entries
+.filter(e=>e.child===c)
+.reduce((s,e)=>s+Number(e.total),0);
+
+let paid=
+entries
+.filter(e=>e.paid)
+.reduce((s,e)=>s+Number(e.total),0);
+
+let all=
+entries
+.reduce((s,e)=>s+Number(e.total),0);
+
+document.getElementById('rNastia').textContent=
+money(total('Настя'));
+
+document.getElementById('rRoma').textContent=
+money(total('Рома'));
+
+document.getElementById('rTotal').textContent=
+money(all);
+
+document.getElementById('rTasks').textContent=
+entries.length;
+
+document.getElementById('rPaid').textContent=
+money(paid);
+
+document.getElementById('rDue').textContent=
+money(all-paid);
+
+
+let now=new Date();
+
+let m=now.getMonth();
+
+let y=now.getFullYear();
+
+let me=entries.filter(e=>{
+
+let d=new Date(e.date);
+
+return d.getMonth()===m &&
+d.getFullYear()===y;
+
+});
+
+let ms=me.reduce(
+(s,e)=>s+Number(e.total),
+0
+);
+
+document.getElementById('monthStats').innerHTML=
+`<b>${money(ms)}</b> зароблено цього місяця · ${me.length} виконаних завдань`;
+
+
+let counts={};
+
+entries.forEach(e=>{
+
+counts[e.task]=
+(counts[e.task]||0)+1;
+
+});
+
+let arr=
+Object.entries(counts)
+.sort((a,b)=>b[1]-a[1]);
+
+document.getElementById('workStats').innerHTML=
+arr.length
+?
+'<table><tr><th>Робота</th><th>Разів</th></tr>'+
+arr.map(x=>
+`<tr><td>${x[0]}</td><td>${x[1]}</td></tr>`
+).join('')+
+'</table>'
+:
+'<div class="empty">Ще немає статистики</div>';
+
+}
+
+
+window.copyViber=async function(){
+
+let all=
+entries.reduce((s,e)=>s+Number(e.total),0);
+
+let paid=
+entries
+.filter(e=>e.paid)
+.reduce((s,e)=>s+Number(e.total),0);
+
+let n=
+entries
+.filter(e=>e.child==='Настя')
+.reduce((s,e)=>s+Number(e.total),0);
+
+let r=
+entries
+.filter(e=>e.child==='Рома')
+.reduce((s,e)=>s+Number(e.total),0);
+
+let text=
+`👴 ДОПОМОГА ДІДУСЕВІ
+📅 Звіт на ${new Date().toLocaleDateString('uk-UA')}
+
+👧 Настя: ${money(n)}
+👦 Рома: ${money(r)}
+💰 Разом: ${money(all)}
+💶 Виплачено: ${money(paid)}
+⏳ До виплати: ${money(all-paid)}
+📋 Виконано завдань: ${entries.length}`;
+
+try{
+
+await navigator.clipboard.writeText(text);
+
+alert(
+'Звіт скопійовано. Тепер вставте його у Viber-групу.'
+);
+
+}catch(e){
+
+prompt(
+'Скопіюйте текст вручну:',
+text
+);
+
+}
+
+};
+
+
+window.clearAll=function(){
+
+alert(
+'Функція повного видалення поки вимкнена для безпеки спільної бази.'
+);
+
+};
+
+
+async function startApp(){
+
+try{
+
+await signInAnonymously(auth);
+
+document.getElementById('status').innerHTML=
+'☁️ Сімейна база підключена';
+
+document.getElementById('status').style.color=
+'#166534';
+
+setTimeout(()=>{
+
+document.getElementById('status').style.display='none';
+
+},1500);
+
+await loadEntries();
+
+showScreen('home');
+
+}catch(error){
+
+console.error(error);
+
+document.getElementById('status').innerHTML=
+'❌ Не вдалося підключитися до Firebase.';
+
+}
+
+}
+
+
+startApp();
+
+</script>
+
+</body>
+</html>
