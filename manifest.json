@@ -1,0 +1,22 @@
+{
+  "name": "PFLEGE — Допомога дідусеві",
+  "short_name": "PFLEGE",
+  "description": "Сімейний застосунок для обліку допомоги дідусеві.",
+  "lang": "uk",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#17110d",
+  "theme_color": "#17110d",
+  "categories": ["productivity", "lifestyle", "family"],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
