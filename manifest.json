@@ -10,13 +10,8 @@
   "orientation": "portrait",
   "background_color": "#17110d",
   "theme_color": "#17110d",
-  "categories": ["productivity", "lifestyle", "family"],
+  "categories": ["family", "lifestyle", "productivity"],
   "icons": [
-    {
-      "src": "./icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
   ]
 }
