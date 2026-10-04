@@ -1,96 +1,41 @@
 <!doctype html>
 <html lang="uk" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#17110d">
-  <meta name="description" content="PFLEGE — сімейний застосунок для обліку допомоги дідусеві.">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="PFLEGE">
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <title>PFLEGE — Допомога дідусеві</title>
-  <link rel="stylesheet" href="./style.css">
-</head>
-<body>
-  <div id="authView" class="auth-shell">
-    <div class="auth-brand">
-      <div class="brand-mark">♥</div>
-      <div><div class="brand-title">PFLEGE</div><div class="brand-subtitle" data-i18n="subtitle">Допомога дідусеві</div></div>
-    </div>
-    <div class="auth-hero">
-      <div class="grandpa-art grandpa-art--auth" aria-hidden="true"><div class="grandpa-body"></div><div class="grandpa-head"></div><div class="grandpa-hair"></div><div class="grandpa-brow brow-l"></div><div class="grandpa-brow brow-r"></div><div class="grandpa-eye eye-l"></div><div class="grandpa-eye eye-r"></div><div class="grandpa-nose"></div><div class="grandpa-mustache"></div></div>
-      <div class="eyebrow" data-i18n="familyCare">СІМЕЙНА ТУРБОТА</div>
-      <h1>PFLEGE</h1>
-      <p data-i18n="welcomeText">Разом допомагаємо. Разом піклуємося.</p>
-    </div>
-    <div id="loginCard" class="auth-card">
-      <div class="eyebrow" data-i18n="login">ВХІД</div>
-      <h2 data-i18n="welcomeBack">Раді бачити знову</h2>
-      <label for="loginEmail">E-Mail</label><input id="loginEmail" type="email" autocomplete="email">
-      <label for="loginPassword" data-i18n="password">Пароль</label><input id="loginPassword" type="password" autocomplete="current-password">
-      <button id="loginButton" class="btn btn-gold btn-block" data-i18n="loginButton">Увійти</button>
-      <button id="openRegister" class="btn btn-secondary btn-block" data-i18n="createAccount">Створити акаунт</button>
-      <div id="loginError" class="form-error" hidden></div>
-    </div>
-    <div id="registerCard" class="auth-card" hidden>
-      <div class="eyebrow" data-i18n="registration">РЕЄСТРАЦІЯ</div>
-      <h2 data-i18n="createAccount">Створити акаунт</h2>
-      <label for="registerName" data-i18n="name">Ім'я</label><input id="registerName" maxlength="40" autocomplete="name">
-      <label for="registerEmail">E-Mail</label><input id="registerEmail" type="email" autocomplete="email">
-      <label for="registerPassword" data-i18n="password">Пароль</label><input id="registerPassword" type="password" autocomplete="new-password">
-      <label for="registerPassword2" data-i18n="repeatPassword">Повторіть пароль</label><input id="registerPassword2" type="password" autocomplete="new-password">
-      <button id="registerButton" class="btn btn-gold btn-block" data-i18n="registerButton">Зареєструватися</button>
-      <button id="backToLogin" class="btn btn-secondary btn-block" data-i18n="back">Назад</button>
-      <div id="registerError" class="form-error" hidden></div>
-    </div>
-    <div class="auth-language"><button id="authLangUa" class="lang-button active">UA</button><button id="authLangDe" class="lang-button">DE</button></div>
-  </div>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17110d"><meta name="description" content="PFLEGE — Допомога дідусеві">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="PFLEGE">
+<link rel="manifest" href="./manifest.json"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css">
+<title>PFLEGE — Допомога дідусеві</title>
+</head><body>
+<div id="toast" class="toast"></div>
+<div id="authView" class="auth-shell">
+  <div class="auth-top"><div class="logo-mark">♥</div><div><b>PFLEGE</b><small>Допомога дідусеві</small></div><div class="lang-pills"><button data-auth-lang="uk" class="active">UA</button><button data-auth-lang="de">DE</button></div></div>
+  <div class="auth-portrait"><img src="./assets/grandpa.png" alt="Дідусь"></div>
+  <div class="script-title">Разом<br>допомагаємо<br>дідусеві <span>♥</span></div>
+  <section id="loginCard" class="auth-card"><div class="eyebrow">ВХІД</div><h1>Раді бачити знову</h1><label>E-Mail</label><input id="loginEmail" type="email" autocomplete="email"><label>Пароль</label><input id="loginPassword" type="password" autocomplete="current-password"><button id="loginBtn" class="btn gold wide">Увійти</button><button id="openRegister" class="btn ghost wide">Створити акаунт</button><div id="loginError" class="error" hidden></div></section>
+  <section id="registerCard" class="auth-card" hidden><div class="eyebrow">РЕЄСТРАЦІЯ</div><h1>Новий учасник</h1><label>Ім'я</label><input id="regName" maxlength="40"><label>E-Mail</label><input id="regEmail" type="email"><label>Пароль</label><input id="regPass" type="password"><label>Повторіть пароль</label><input id="regPass2" type="password"><button id="regBtn" class="btn gold wide">Зареєструватися</button><button id="backLogin" class="btn ghost wide">Назад</button><div id="regError" class="error" hidden></div></section>
+</div>
 
-  <div id="appView" class="app-shell" hidden>
-    <header class="app-header">
-      <button id="headerHome" class="header-brand" aria-label="PFLEGE"><span class="brand-dot">♥</span><span><strong>PFLEGE</strong><small data-i18n="subtitle">Допомога дідусеві</small></span></button>
-      <div class="header-actions"><button id="headerProfile" class="avatar avatar--sm" aria-label="Профіль"></button><button id="menuButton" class="icon-button" aria-label="Меню">☰</button></div>
-    </header>
-
-    <main class="main-content">
-      <section id="screen-home" class="screen active">
-        <div class="welcome-row"><div><div class="eyebrow" data-i18n="familyCare">СІМЕЙНА ТУРБОТА</div><h1><span data-i18n="hello">Привіт</span>, <span id="homeName">—</span>!</h1><p data-i18n="thankYou">Дякуємо, що ти поруч ❤️</p></div><span id="homeAdminBadge" class="admin-badge" hidden>ADMIN</span></div>
-        <div class="grandpa-card"><div class="grandpa-copy"><span class="soft-badge">♥ PFLEGE</span><h2 data-i18n="together">Разом допомагаємо дідусеві</h2><p data-i18n="togetherText">Кожна маленька допомога має значення.</p></div><div class="grandpa-art grandpa-art--home" aria-hidden="true"><div class="grandpa-body"></div><div class="grandpa-head"></div><div class="grandpa-hair"></div><div class="grandpa-brow brow-l"></div><div class="grandpa-brow brow-r"></div><div class="grandpa-eye eye-l"></div><div class="grandpa-eye eye-r"></div><div class="grandpa-nose"></div><div class="grandpa-mustache"></div></div></div>
-        <div class="earn-card"><div><span class="card-kicker" data-i18n="thisMonth">ЦЬОГО МІСЯЦЯ</span><div id="homeTotal" class="big-money">0,00 €</div></div><div class="mini-chart" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div><div class="summary-strip"><div class="summary-item"><b id="homeDue">0,00 €</b><span data-i18n="toPay">До виплати</span></div><div class="summary-item"><b id="homePaid">0,00 €</b><span data-i18n="paid">Виплачено</span></div></div><button id="addWorkHome" class="btn btn-gold btn-block">＋ <span data-i18n="addWork">Додати роботу</span></button></div>
-        <div class="section-head"><div><div class="eyebrow" data-i18n="quick">ШВИДКО</div><h2 data-i18n="tasks">Завдання</h2></div><button id="seeAllTasks" class="text-button" data-i18n="all">Усі</button></div>
-        <div id="homeTasks" class="task-grid"></div>
-        <div class="section-head section-head--spaced"><div><div class="eyebrow" data-i18n="latest">ОСТАННЄ</div><h2 data-i18n="activity">Активність</h2></div><button id="seeHistory" class="text-button" data-i18n="all">Усі</button></div>
-        <div id="homeRecent" class="stack"></div>
-      </section>
-
-      <section id="screen-tasks" class="screen"><div class="screen-title"><div><div class="eyebrow" data-i18n="work">РОБОТА</div><h1 data-i18n="tasks">Завдання</h1></div></div><div id="tasksList" class="stack"></div></section>
-
-      <section id="screen-add" class="screen"><button class="back-button" id="backFromAdd">← <span data-i18n="back">Назад</span></button><div class="form-card"><div id="addTaskIcon" class="task-icon-large">✓</div><h2 id="addTaskTitle">—</h2><p id="addTaskDescription" class="muted"></p><div id="hoursField"><label for="hoursInput"><span data-i18n="hours">Кількість годин</span></label><div class="number-stepper"><button id="hoursMinus" type="button">−</button><input id="hoursInput" type="number" min="0.25" step="0.25" value="1"><button id="hoursPlus" type="button">＋</button></div></div><label for="workDate" data-i18n="date">Дата</label><input id="workDate" type="date"><label for="workNote" data-i18n="noteOptional">Примітка (необов'язково)</label><textarea id="workNote" maxlength="300"></textarea><div class="total-preview"><span data-i18n="total">Разом</span><strong id="addTotal">0,00 €</strong></div><button id="saveWork" class="btn btn-gold btn-block" data-i18n="saveWork">Додати роботу</button><p class="note" data-i18n="pendingNote">Після додавання робота очікує підтвердження адміністратора.</p></div></section>
-
-      <section id="screen-history" class="screen"><div class="screen-title"><div><div class="eyebrow" data-i18n="myRecords">МОЇ ЗАПИСИ</div><h1 data-i18n="history">Історія</h1></div></div><div class="segmented"><button data-history-filter="all" class="active" data-i18n="all">Усі</button><button data-history-filter="pending" data-i18n="pending">Очікує</button><button data-history-filter="approved" data-i18n="approved">Підтверджено</button><button data-history-filter="paid" data-i18n="paid">Виплачено</button></div><div id="historyList" class="stack"></div></section>
-
-      <section id="screen-reports" class="screen"><div class="screen-title"><div><div class="eyebrow" data-i18n="overview">ОГЛЯД</div><h1 data-i18n="reports">Звіти</h1></div><select id="reportPeriod" class="small-select"><option value="month" data-i18n="month">Місяць</option><option value="quarter" data-i18n="quarter">Квартал</option><option value="year" data-i18n="year">Рік</option></select></div><div class="stats-grid"><div class="stat-card accent"><b id="reportTotal">0 €</b><span data-i18n="overall">Загальна сума</span></div><div class="stat-card"><b id="reportPaid">0 €</b><span data-i18n="paid">Виплачено</span></div><div class="stat-card"><b id="reportDue">0 €</b><span data-i18n="toPay">До виплати</span></div><div class="stat-card"><b id="reportCount">0</b><span data-i18n="worksCount">Кількість робіт</span></div></div><div class="chart-card"><div class="section-head"><h2 data-i18n="byMembers">По учасниках</h2></div><div id="reportMembers" class="stack"></div></div><button id="copyReport" class="btn btn-gold btn-block report-share">↗ <span data-i18n="shareReport">Поділитися звітом</span></button></section>
-
-      <section id="screen-profile" class="screen"><div class="profile-hero"><div id="profileAvatar" class="avatar avatar--xl"></div><h1 id="profileName">—</h1><p id="profileRole" class="muted">—</p><button id="editProfileButton" class="floating-edit" aria-label="Редагувати">✎</button></div><div id="profileStats" class="profile-stats"></div><div class="list-card"><div class="section-head"><h2 data-i18n="chooseAvatar">Мій аватар</h2></div><div id="avatarPicker" class="avatar-picker"></div></div><div class="list-card"><div class="profile-row"><span>E-Mail</span><b id="profileEmailValue">—</b></div><div class="profile-row"><span data-i18n="role">Роль</span><b id="profileRoleValue">—</b></div></div><button id="logoutButton" class="btn btn-danger btn-block" data-i18n="logout">Вийти</button></section>
-
-      <section id="screen-admin" class="screen"><div class="screen-title"><div><div class="eyebrow">ADMIN</div><h1 data-i18n="admin">Адміністратор</h1></div></div><div id="adminStats" class="stats-grid"></div><div class="admin-tabs"><button data-admin-tab="members" class="active" data-i18n="members">Учасники</button><button data-admin-tab="tasks" data-i18n="tasks">Завдання</button><button data-admin-tab="works" data-i18n="worksPayments">Роботи</button></div><div id="adminPanel"></div></section>
-
-      <section id="screen-share" class="screen"><button class="back-button" id="backFromShare">← <span data-i18n="back">Назад</span></button><div class="screen-title"><div><div class="eyebrow">PFLEGE</div><h1 data-i18n="sharePlege">Поділитися PFLEGE</h1></div></div><div class="list-card qr-card"><img src="./qr.svg" alt="QR-код PFLEGE" class="qr-code"><h2 data-i18n="scanQr">Скануйте QR-код камерою телефону</h2><p class="muted" data-i18n="qrText">Відкриється PFLEGE, після чого застосунок можна встановити на телефон.</p><code>volodyka-d0e6f.web.app</code><button id="shareAppButton" class="btn btn-gold btn-block">↗ <span data-i18n="share">Поділитися</span></button><button id="installButton" class="btn btn-secondary btn-block" data-i18n="install">Встановити PFLEGE</button></div></section>
-
-      <section id="screen-settings" class="screen"><div class="screen-title"><div><div class="eyebrow" data-i18n="settingsSmall">ПЕРСОНАЛІЗАЦІЯ</div><h1 data-i18n="settings">Налаштування</h1></div></div><div class="list-card"><div class="profile-row"><span data-i18n="theme">Тема</span><div class="theme-switch"><button id="themeDark" class="active">☾</button><button id="themeLight">☀</button></div></div><div class="profile-row"><span data-i18n="language">Мова</span><div class="theme-switch"><button id="langUa" class="active">UA</button><button id="langDe">DE</button></div></div></div><div class="list-card"><button id="settingsShare" class="menu-action">▣ <span data-i18n="sharePlege">Поділитися PFLEGE</span><span>›</span></button><button id="settingsInstall" class="menu-action">＋ <span data-i18n="install">Встановити PFLEGE</span><span>›</span></button></div></section>
-    </main>
-
-    <nav class="bottom-nav" aria-label="Навігація"><button data-nav="home" class="active"><span>⌂</span><small data-i18n="home">Головна</small></button><button data-nav="tasks"><span>✓</span><small data-i18n="tasks">Завдання</small></button><button data-nav="add" class="nav-add"><span>＋</span><small data-i18n="work">Робота</small></button><button data-nav="history"><span>◷</span><small data-i18n="history">Історія</small></button><button id="navMenu"><span>☰</span><small data-i18n="menu">Меню</small></button></nav>
-  </div>
-
-  <div id="sideMenu" class="side-menu" hidden><div id="sideBackdrop" class="side-backdrop"></div><aside class="side-panel"><div class="side-header"><strong>PFLEGE</strong><button id="closeMenu" class="icon-button">×</button></div><div id="menuUser" class="menu-user"></div><div class="menu-links"><button data-menu-nav="reports">▣ <span data-i18n="reports">Звіти</span></button><button data-menu-nav="profile">♙ <span data-i18n="profile">Профіль</span></button><button id="menuAdmin" data-menu-nav="admin" hidden>⚙ <span data-i18n="admin">Адміністратор</span></button><button data-menu-nav="settings">☼ <span data-i18n="settings">Налаштування</span></button><button data-menu-nav="share">⌁ <span data-i18n="sharePlege">Поділитися PFLEGE</span></button></div></aside></div>
-
-  <div id="profileModal" class="modal" hidden><div class="modal-backdrop" data-close-modal></div><div class="modal-card"><button class="modal-close" data-close-modal>×</button><h2 data-i18n="editProfile">Редагувати профіль</h2><label for="editNameInput" data-i18n="name">Ім'я</label><input id="editNameInput" maxlength="40"><button id="saveProfile" class="btn btn-gold btn-block" data-i18n="save">Зберегти</button></div></div>
-  <div id="avatarOnboarding" class="modal" hidden><div class="modal-backdrop"></div><div class="modal-card"><div class="eyebrow" data-i18n="oneLastStep">ЩЕ ОДИН КРОК</div><h2 data-i18n="chooseYourself">Обери свій аватар</h2><p class="muted" data-i18n="avatarText">Обери образ, у якому ти себе впізнаєш.</p><div id="onboardingAvatarPicker" class="avatar-picker"></div><button id="finishAvatarButton" class="btn btn-gold btn-block" disabled data-i18n="continue">Продовжити</button></div></div>
-  <div id="toast" class="toast" role="status"></div>
-
-  <script type="module" src="./app.js"></script>
-</body>
-</html>
+<div id="appView" hidden>
+<header class="topbar"><button class="brand" id="homeBtn"><span class="brand-icon">⌂</span><span><b>PFLEGE</b><small>Допомога дідусеві</small></span></button><div class="top-actions"><button id="langBtn" class="chip">UA</button><button id="profileBtn" class="avatar sm"></button><button id="menuBtn" class="icon">☰</button></div></header>
+<main class="main">
+<section id="screen-home" class="screen active">
+  <div class="hero"><div class="hero-photo"><img src="./assets/grandpa.png" alt="Дідусь"><div class="hero-gradient"></div><div class="hero-script">Разом<br>допомагаємо<br>дідусеві <span>♥</span></div></div></div>
+  <div class="greeting card"><div id="homeAvatar" class="avatar md"></div><div><div class="eyebrow">СІМЕЙНА ТУРБОТА</div><h2>Привіт, <span id="homeName">—</span>!</h2><p>Дякуємо, що ти поруч <span>♥</span></p></div></div>
+  <div class="money-card card"><div class="money-head"><div><small>ЦЬОГО МІСЯЦЯ</small><strong id="homeTotal">0,00 €</strong></div><div class="bars"><i></i><i></i><i></i><i></i><i></i></div></div><div class="money-grid"><div><small>До виплати</small><b id="homeDue">0,00 €</b></div><div><small>Виплачено</small><b id="homePaid">0,00 €</b></div></div><button id="homeAdd" class="btn gold wide">＋&nbsp; Додати роботу</button></div>
+  <div class="section-title"><h2>Остання активність</h2><button data-screen="history">Всі</button></div><div id="homeRecent" class="list"></div>
+</section>
+<section id="screen-tasks" class="screen"><div class="page-head"><div><div class="eyebrow">РОБОТА</div><h1>Завдання</h1></div><button id="tasksFilter" class="chip">Мої</button></div><div id="tasksList" class="task-list"></div></section>
+<section id="screen-add" class="screen"><div class="page-head"><button class="back" data-screen="tasks">‹</button><div><div class="eyebrow">НОВИЙ ЗАПИС</div><h1>Додати роботу</h1></div><span class="chip">UA</span></div><div class="card form-card"><h3>Хто виконував?</h3><div id="peoplePicker" class="people"></div><h3 class="mt">Виберіть завдання</h3><div id="selectedTaskCard" class="selected-task"></div><div id="hoursWrap" hidden><label>Кількість годин</label><div class="stepper"><button id="hoursMinus">−</button><input id="hours" type="number" min="0.25" step="0.25" value="1"><button id="hoursPlus">＋</button></div></div><label>Дата</label><input id="workDate" type="date"><label>Примітка</label><textarea id="workNote" maxlength="300" placeholder="Необов'язково"></textarea><div class="total-line"><span>Разом</span><b id="workTotal">0,00 €</b></div><button id="saveWork" class="btn gold wide">Додати роботу</button><p class="hint">Після додавання робота очікує підтвердження адміністратора.</p></div></section>
+<section id="screen-history" class="screen"><div class="page-head"><div><div class="eyebrow">МОЇ ЗАПИСИ</div><h1>Історія</h1></div></div><div class="tabs" id="historyTabs"><button data-filter="all" class="active">Усі</button><button data-filter="pending">Очікує</button><button data-filter="approved">Підтверджено</button><button data-filter="paid">Виплачено</button></div><div id="historyList" class="list"></div></section>
+<section id="screen-reports" class="screen"><div class="page-head"><div><div class="eyebrow">ОГЛЯД</div><h1>Звіти</h1></div><select id="reportPeriod"><option value="month">Місяць</option><option value="quarter">Квартал</option><option value="year">Рік</option></select></div><div class="stats"><div><small>Загальна сума</small><b id="rTotal">0 €</b></div><div class="green-card"><small>Виплачено</small><b id="rPaid">0 €</b></div><div><small>До виплати</small><b id="rDue">0 €</b></div><div><small>Кількість робіт</small><b id="rCount">0</b></div></div><div class="card"><h3>По учасниках</h3><div id="rMembers"></div></div><button id="shareReport" class="btn gold wide">⌯&nbsp; Поділитися звітом</button></section>
+<section id="screen-profile" class="screen"><div class="profile-cover"><div id="profileAvatar" class="avatar xl"></div><button id="editProfile" class="edit-dot">✎</button><h1 id="profileName">—</h1><p id="profileRole">—</p></div><div id="profileStats" class="stats"></div><div class="card"><div class="section-title"><h3>Мій аватар</h3></div><div id="avatarPicker" class="avatar-picker"></div></div><div class="card"><div class="info-row"><span>E-Mail</span><b id="profileEmail">—</b></div><div class="info-row"><span>Роль</span><b id="profileRole2">—</b></div></div><button id="logout" class="btn danger wide">Вийти</button></section>
+<section id="screen-admin" class="screen"><div class="page-head"><div><div class="eyebrow">ADMIN</div><h1>Адміністратор</h1></div></div><div id="adminStats" class="stats"></div><div class="admin-tabs"><button data-admin="members" class="active">Учасники</button><button data-admin="tasks">Завдання</button><button data-admin="works">Роботи</button></div><div id="adminPanel"></div></section>
+<section id="screen-share" class="screen"><div class="page-head"><button class="back" data-screen="home">‹</button><div><div class="eyebrow">PFLEGE</div><h1>Поділитися PFLEGE</h1></div></div><div class="card share-card"><img src="./qr.svg" class="qr" alt="QR-код PFLEGE"><h2>Приєднатися до PFLEGE</h2><p>Скануйте QR-код камерою телефону.</p><code>volodyka-d0e6f.web.app</code><button id="shareApp" class="btn gold wide">Поділитися</button><button id="installApp" class="btn ghost wide">Встановити PFLEGE</button></div></section>
+<section id="screen-settings" class="screen"><div class="page-head"><div><div class="eyebrow">ПЕРСОНАЛІЗАЦІЯ</div><h1>Налаштування</h1></div></div><div class="card"><div class="info-row"><span>Тема</span><div class="switch"><button id="darkMode" class="active">☾</button><button id="lightMode">☀</button></div></div><div class="info-row"><span>Мова</span><div class="switch"><button id="uaMode" class="active">UA</button><button id="deMode">DE</button></div></div></div><div class="card menu-list"><button data-screen="share">▣ <span>Поділитися PFLEGE</span>›</button><button id="installSettings">＋ <span>Встановити PFLEGE</span>›</button></div></section>
+</main>
+<nav class="bottom"><button data-screen="home" class="active"><span>⌂</span><small>Головна</small></button><button data-screen="tasks"><span>✓</span><small>Завдання</small></button><button data-screen="add" class="add"><span>＋</span><small>Робота</small></button><button data-screen="history"><span>◷</span><small>Історія</small></button><button id="bottomMenu"><span>☰</span><small>Меню</small></button></nav>
+</div>
+<div id="menu" class="drawer" hidden><div id="drawerBack" class="drawer-back"></div><aside><div class="drawer-head"><b>PFLEGE</b><button id="closeMenu">×</button></div><div id="drawerUser" class="drawer-user"></div><div class="drawer-links"><button data-screen="profile">◯ <span>Профіль</span>›</button><button data-screen="reports">▥ <span>Звіти</span>›</button><button id="adminLink" data-screen="admin" hidden>⚙ <span>Адміністратор</span>›</button><button data-screen="settings">☼ <span>Налаштування</span>›</button><button data-screen="share">⌁ <span>Поділитися PFLEGE</span>›</button></div></aside></div>
+<div id="profileModal" class="modal" hidden><div class="modal-back" data-close-profile></div><div class="modal-card"><button class="modal-x" data-close-profile>×</button><h2>Редагувати профіль</h2><label>Ім'я</label><input id="editName"><button id="saveName" class="btn gold wide">Зберегти</button></div></div>
+<script type="module" src="./app.js"></script></body></html>
