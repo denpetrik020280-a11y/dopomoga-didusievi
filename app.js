@@ -14,7 +14,7 @@ const DEFAULT=[
 {id:"errand",name:"Додаткова допомога / супровід",desc:"Поїздки, супровід, організаційна допомога",type:"hour",rate:10,icon:"🔧"},
 {id:"physical",name:"Додаткове прибирання / фізична робота",desc:"Додаткова фізична робота",type:"hour",rate:15,icon:"🪚"}];
 const S={user:null,profile:null,isAdmin:false,tasks:[],entries:[],members:[],selectedTask:null,selectedPerson:"denys",filter:"all",period:"month",screen:"home",adminTab:"members",theme:localStorage.getItem("pflege-theme")||"dark",lang:localStorage.getItem("pflege-lang")||"uk",installPrompt:null};
-const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",""":"&quot;","'":"&#039;"}[m]));
+const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
 const money=n=>Number(n||0).toLocaleString(S.lang==="de"?"de-DE":"uk-UA",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
 const dval=v=>{if(v?.toDate)return v.toDate();const d=new Date(v);return Number.isNaN(d.getTime())?new Date():d};
 const date=v=>dval(v).toLocaleDateString(S.lang==="de"?"de-DE":"uk-UA",{day:"2-digit",month:"short",year:"numeric"});
